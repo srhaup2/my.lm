@@ -1,11 +1,11 @@
 Package: my.lm
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Fits a Linear Model
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Spencer Haupert
+Maintainer: Spencer Haupert <srhaup@umich.edu>
+Description:    This package reimplements the main functionality from 
+the lm() function in R's stats package.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true

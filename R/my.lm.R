@@ -16,7 +16,6 @@ my.lm = function(formula, data, subset, weights, na.action) {
 
 
 
-  return(list(coefficients = coefficients, std.err = std.err, t.stat = t.stat,
-              p.val = p.val, residuals = residuals, fitted.values = fitted.values,
+  return(list(coefficients = coefficients, residuals = residuals, fitted.values = fitted.values,
               df.residual = df.residual, call = call, terms = terms, model = model))
 }
