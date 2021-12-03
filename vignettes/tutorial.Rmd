@@ -1,0 +1,67 @@
+---
+title: "tutorial"
+author: "Spencer Haupert"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Welcome
+
+`my.lm` is a package I created for the class Biostats 625 - Computing with Big Data I took during my MS Biostatistics degree. 
+The objective of the project was to implement a statistical technique and wrap it up in an R package.
+I decided to re-implement the main functionality of R's `lm` function and its associated `summary()` method.
+
+`lm` implements linear regression models using either ordinary least squares (OLS) or weighted least squares (WLS).
+My function, `my.lm` implements the most important functionality of `lm`.
+
+In a nutshell, the user provides a response variables and 1 or more predictor variables. Then, a linear model is fit with either OLS or WLS. OLS should be 
+the default, but if heteroskedasticity is a problem, WLS may be a better choice so that model assumptions are not violated. `my.lm` fits the following model
+
+$$ Y = X^T\beta + \epsilon$$
+
+where Y is a vector of responses, X is a matrix of predictors, $\beta$ is a vector of regression coefficients corresponding to the relationship between the
+response and the predictor, and $\epsilon$ is the random error associated with each response.
+
+In OLS, we find the optimal $\beta$s by minimizing the following equation:
+
+$$\hat\beta = \underset{\beta}{\operatorname{min}} S(\beta) =  (Y - X^T\beta)^T(Y - X^T\beta) $$
+
+And in WLS, we use the following equation:
+
+$$\hat\beta = \underset{\beta}{\operatorname{min}} S(\beta) =  (Y - X^T\beta)^TW(Y - X^T\beta) $$
+
+where W is a diagonal matrix of specified weights. 
+
+See [this link](https://en.wikipedia.org/wiki/Linear_regression) if you are unfamiliar with linear models. 
+
+
+
+Now, how do we use this package?
+
+# Usage
+
+### First, load the package (and other packages used for illustration)
+
+```{r setup, warning = FALSE, message = FALSE}
+library(my.lm)
+library(tidyverse)
+```
+
+### Let's load a toy dataset for illustration
+
+```{r}
+get(data(mtcars))
+head(mtcars)
+```
+
+### 
