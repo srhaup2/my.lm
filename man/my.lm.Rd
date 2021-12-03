@@ -4,7 +4,7 @@
 \alias{my.lm}
 \title{my.lm}
 \usage{
-my.lm(formula, data, weights)
+my.lm(formula, data, weights = NULL)
 }
 \arguments{
 \item{formula}{formula specifying the regression equation}
@@ -14,14 +14,39 @@ my.lm(formula, data, weights)
 \item{weights}{optional numeric vector to be used in a WLS regression}
 }
 \value{
-A list containing the coefficients, residuals, fitted values, and more
+A list containing regression results
+\itemize{
+  \item coefficients - beta coefficients
+  \item residuals - observed minus fitted values
+  \item fitted.values - expected outcomes based on regression coefficients
+  \item mse = variance of the outcome
+  \item se_beta - standard errors for the coefficients
+  \item r2 - R-squared
+  \item adj.r2 - adjusted R-squared
+  \item t - t test statistics for each coefficient
+  \item t.p.vals - p values for each coefficient
+  \item f - f statistic for the model
+  \item f.p.val - p value for the f statistic
+  \item df.residual - degrees of freedom for SSE (n-p)
+  \item n - number of observations
+  \item p - number of mean parameters
+  \item method - OLS or WLS depending on whether weights were specified
+  \item weights - if weights provided as argument, this returns that argument
+  \item formula - this returns the formula argument
+  \item design.mat - design matrix used to fit the model
+}
 }
 \description{
 Fits a linear regression model using OLS
 }
 \examples{
 get(data(mtcars))
+
+#OLS
 my.fit = my.lm(mpg ~ cyl, data = mtcars)
 my.fit$coefficients
 
+#WLS
+my.fit2 = my.lm(mpg ~ cyl, data = mtcars, weights = 1:32)
+my.fit2$coefficients
 }

@@ -8,17 +8,42 @@
 #'
 #'@param weights optional numeric vector to be used in a WLS regression
 #'
-#'@return A list containing the coefficients, residuals, fitted values, and more
+#'@return A list containing regression results
+#'\itemize{
+#'   \item coefficients - beta coefficients
+#'   \item residuals - observed minus fitted values
+#'   \item fitted.values - expected outcomes based on regression coefficients
+#'   \item mse = variance of the outcome
+#'   \item se_beta - standard errors for the coefficients
+#'   \item r2 - R-squared
+#'   \item adj.r2 - adjusted R-squared
+#'   \item t - t test statistics for each coefficient
+#'   \item t.p.vals - p values for each coefficient
+#'   \item f - f statistic for the model
+#'   \item f.p.val - p value for the f statistic
+#'   \item df.residual - degrees of freedom for SSE (n-p)
+#'   \item n - number of observations
+#'   \item p - number of mean parameters
+#'   \item method - OLS or WLS depending on whether weights were specified
+#'   \item weights - if weights provided as argument, this returns that argument
+#'   \item formula - this returns the formula argument
+#'   \item design.mat - design matrix used to fit the model
+#'}
 #'
 #'@examples
 #'get(data(mtcars))
+#'
+#'#OLS
 #'my.fit = my.lm(mpg ~ cyl, data = mtcars)
 #'my.fit$coefficients
 #'
+#'#WLS
+#'my.fit2 = my.lm(mpg ~ cyl, data = mtcars, weights = 1:32)
+#'my.fit2$coefficients
 #'@export
 #'
 
-my.lm = function(formula, data, weights) {
+my.lm = function(formula, data, weights = NULL) {
   ### load pipe
   `%>%` <- magrittr::`%>%`
   ### extract formula
@@ -34,7 +59,8 @@ my.lm = function(formula, data, weights) {
   n = nrow(mm)
   p = ncol(mm)
   ### WLS or OLS
-  if(!missing("weights")) {
+  method = ifelse(is.null(weights), "OLS", "WLS")
+  if(method == "WLS") {
     #use WLS estimator
     w = diag(weights)
     coefficients = solve(t(mm) %*% w %*% mm) %*% (t(mm) %*% w %*% y)
@@ -71,11 +97,12 @@ my.lm = function(formula, data, weights) {
   adj.r2 = 1 - ((sse/(n-p))/(ssy/(n-1)))
   #t stats
   t = coefficients/se_beta
-  t.p.vals = ifelse(t > 0, (2* stats::pt(t, df = 29, lower.tail = FALSE)), (2* stats::pt(t, df = 29, lower.tail = TRUE)))
+  t.p.vals = ifelse(t > 0, (2* stats::pt(t, df = n-p, lower.tail = FALSE)), (2* stats::pt(t, df = n-p, lower.tail = TRUE)))
   #f stat
   f = msr/mse
   f.p.val = stats::pf(f, p-1, n-p, lower.tail = FALSE)
   return(list(coefficients = coefficients, residuals = residuals, fitted.values = fitted.values,
               mse = mse, se_beta = se_beta, r2 = r2, adj.r2 = adj.r2, t = t, t.p.vals = t.p.vals,
-              f = f, f.p.val = f.p.val,df.residual = n - p, formula = formula, design.mat = mm))
+              f = f, f.p.val = f.p.val,df.residual = n - p, n = n, p = p, method = method,
+              weights = weights, formula = formula, design.mat = mm))
 }

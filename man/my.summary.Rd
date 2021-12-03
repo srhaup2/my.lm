@@ -13,7 +13,7 @@ my.summary(x)
 no return value - this function only cats a summary of the regression
 }
 \description{
-cats regression summary from output of my.lm function
+prints regression summary from output of my.lm function
 }
 \examples{
 get(data(mtcars))
