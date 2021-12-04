@@ -47,7 +47,7 @@ fit_OLS = my.lm(mpg ~ cyl, data = mtcars)
 my.summary(fit_OLS)
 
 #fit a linear regression model with WLS
-fit_OLS = my.lm(mpg ~ cyl, data = mtcars, weights = 1:32)
+fit_WLS = my.lm(mpg ~ cyl, data = mtcars, weights = 1:32)
 
 #print summary
 my.summary(fit_WLS)
