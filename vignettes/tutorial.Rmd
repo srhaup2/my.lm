@@ -57,6 +57,7 @@ library(my.lm)
 library(ggplot2)
 library(bench)
 library(tidyr)
+library(ggbeeswarm)
 ```
 
 Let's load a toy dataset for illustration
