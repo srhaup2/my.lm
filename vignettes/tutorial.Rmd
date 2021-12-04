@@ -56,6 +56,7 @@ First, load the package (and other packages used for illustration)
 library(my.lm)
 library(ggplot2)
 library(bench)
+library(tidyr)
 ```
 
 Let's load a toy dataset for illustration

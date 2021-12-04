@@ -14,7 +14,8 @@ Imports:
     bench,
     ggplot2,
     magrittr,
-    stats
+    stats,
+    tidyr
 RoxygenNote: 7.1.1
 Suggests: 
     rmarkdown,
