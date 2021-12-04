@@ -11,6 +11,8 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    bench,
+    ggplot2,
     magrittr,
     stats
 RoxygenNote: 7.1.1

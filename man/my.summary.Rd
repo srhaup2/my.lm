@@ -10,7 +10,7 @@ my.summary(x)
 \item{x}{output from my.lm function}
 }
 \value{
-no return value - this function only cats a summary of the regression
+no return value - this function only prints a summary of the regression
 }
 \description{
 prints regression summary from output of my.lm function

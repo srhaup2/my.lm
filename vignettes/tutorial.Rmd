@@ -50,18 +50,107 @@ Now, how do we use this package?
 
 # Usage
 
-### First, load the package (and other packages used for illustration)
+First, load the package (and other packages used for illustration)
 
 ```{r setup, warning = FALSE, message = FALSE}
 library(my.lm)
-library(tidyverse)
+library(ggplot2)
+library(bench)
 ```
 
-### Let's load a toy dataset for illustration
+Let's load a toy dataset for illustration
 
 ```{r}
 get(data(mtcars))
 head(mtcars)
 ```
 
-### 
+This dataset contains information on performance of various cars. Suppose we are interested in the relationship between mpg and engine cylinders.
+
+```{r}
+ggplot(data = mtcars, aes(y = mpg, x = cyl)) +
+  geom_point()
+```
+
+This plot is interesting, but what if we want to quantify this relationship? Enter `my.lm`!
+Just supply a regression formula and data frame.
+
+```{r}
+fit_OLS = my.lm(mpg ~ cyl, data = mtcars)
+fit_OLS
+```
+
+`my.lm` fits the model using OLS (default) and returns all sort of useful information including
+the regression coefficients, residuals, fitted values, standard errors, $R^2$ and more. 
+A full description of output is provided in the manual page. This output is a little dense though, don't you think?
+
+For a more readable summary of the model, call the `my.summary` function on your `my.lm` object. `my.summary` is intended 
+to mimic the output on `lm`'s `summary()` method. 
+
+```{r,paged.print=FALSE}
+my.summary(fit_OLS)
+```
+
+Much better!
+
+Now we can plot our regression line on the plot we generated earlier
+
+```{r}
+ggplot(data = mtcars, aes(y = mpg, x = cyl)) +
+  geom_point() + 
+  geom_line(aes(y = fit_OLS$fitted.values), color = "red")
+```
+
+
+
+`my.lm` is capable of modeling variable transformations (log, exp, polynomials) and interaction terms, too. 
+
+```{r,paged.print=FALSE}
+fit_OLS2 = my.lm(mpg ~ cyl + I(cyl^2) + log(hp), data = mtcars)
+my.summary(fit_OLS2)
+```
+
+
+Next, I'll show an example using WLS. To use WLS instead of OLS, simply provide a vector of weights as an argument.
+Note that the length of the weights vector must match the number of rows in the data.
+
+```{r,paged.print=FALSE}
+fit_WLS = my.lm(mpg ~ cyl, data = mtcars, weights = 1:32)
+my.summary(fit_WLS)
+```
+
+It seems like `my.lm` does a pretty good job doing what `lm` does. I suppose we should check to make sure
+results match up.
+
+```{r}
+#coefficients
+all.equal(as.numeric(my.lm(mpg ~ cyl, data = get(data(mtcars)))$coefficients), as.numeric(lm(mpg ~ cyl, data = get(data(mtcars)))$coefficients))
+#residuals
+all.equal(as.numeric(my.lm(mpg ~ cyl, data = get(data(mtcars)))$residuals), as.numeric(lm(mpg ~ cyl, data = get(data(mtcars)))$residuals))
+#fitted values
+all.equal(as.numeric(my.lm(mpg ~ cyl, data = get(data(mtcars)))$fitted.values), as.numeric(lm(mpg ~ cyl, data = get(data(mtcars)))$fitted.values))
+#r squared
+all.equal(my.lm(mpg ~ cyl, data = get(data(mtcars)))$r2, summary(lm(mpg ~ cyl, data = get(data(mtcars))))$r.squared)
+#adjusted r squared
+all.equal(my.lm(mpg ~ cyl, data = get(data(mtcars)))$adj.r2, summary(lm(mpg ~ cyl, data = get(data(mtcars))))$adj.r.squared)
+# f statistic
+all.equal(as.numeric(my.lm(mpg ~ cyl, data = get(data(mtcars)))$f), as.numeric(summary(lm(mpg ~ cyl, data = get(data(mtcars))))$fstatistic[1]))
+# coefficient p values
+all.equal(as.numeric(my.lm(mpg ~ cyl, data = get(data(mtcars)))$t.p.vals), as.numeric(summary(lm(mpg ~ cyl, data = get(data(mtcars))))$coefficients[,4]))
+```
+
+But what about speed?
+
+```{r, fig.width= 6}
+bnch = bench::mark(
+  as.numeric(my.lm(mpg ~ cyl, data = mtcars)$coefficients),
+  as.numeric(lm(mpg ~ cyl, data = mtcars)$coefficients)
+)
+
+bnch
+autoplot(bnch)
+```
+
+The top one is `my.lm`. It looks like performance is fairly similar between the packages, which is great news. That being said, 
+`lm` is quite a bit more robust and fully-featured than `my.lm`, so there is definitely room for improvement.
+

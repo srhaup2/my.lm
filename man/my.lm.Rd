@@ -9,9 +9,9 @@ my.lm(formula, data, weights = NULL)
 \arguments{
 \item{formula}{formula specifying the regression equation}
 
-\item{data}{data.frame to be used to fit the model}
+\item{data}{n x p data.frame to be used to fit the model}
 
-\item{weights}{optional numeric vector to be used in a WLS regression}
+\item{weights}{optional length n numeric vector to be used in a WLS regression}
 }
 \value{
 A list containing regression results
@@ -19,7 +19,7 @@ A list containing regression results
   \item coefficients - beta coefficients
   \item residuals - observed minus fitted values
   \item fitted.values - expected outcomes based on regression coefficients
-  \item mse = variance of the outcome
+  \item mse - variance of the outcome
   \item se_beta - standard errors for the coefficients
   \item r2 - R-squared
   \item adj.r2 - adjusted R-squared
@@ -37,7 +37,7 @@ A list containing regression results
 }
 }
 \description{
-Fits a linear regression model using OLS
+Fits a linear regression model using OLS or WLS
 }
 \examples{
 get(data(mtcars))

@@ -1,19 +1,19 @@
 #'my.lm
 #'
-#'Fits a linear regression model using OLS
+#'Fits a linear regression model using OLS or WLS
 #'
 #'@param formula formula specifying the regression equation
 #'
-#'@param data data.frame to be used to fit the model
+#'@param data n x p data.frame to be used to fit the model
 #'
-#'@param weights optional numeric vector to be used in a WLS regression
+#'@param weights optional length n numeric vector to be used in a WLS regression
 #'
 #'@return A list containing regression results
 #'\itemize{
 #'   \item coefficients - beta coefficients
 #'   \item residuals - observed minus fitted values
 #'   \item fitted.values - expected outcomes based on regression coefficients
-#'   \item mse = variance of the outcome
+#'   \item mse - variance of the outcome
 #'   \item se_beta - standard errors for the coefficients
 #'   \item r2 - R-squared
 #'   \item adj.r2 - adjusted R-squared

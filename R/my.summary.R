@@ -4,7 +4,7 @@
 #'
 #'@param x output from my.lm function
 #'
-#'@return no return value - this function only cats a summary of the regression
+#'@return no return value - this function only prints a summary of the regression
 #'
 #'@examples
 #'get(data(mtcars))
